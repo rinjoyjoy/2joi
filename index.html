@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>将棋 Strike</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="rainbow-waves-bg">
+    <div class="r-wave"></div>
+    <div class="r-wave"></div>
+    <div class="r-wave"></div>
+    <div class="r-wave"></div>
+    <div class="r-wave"></div>
+    <div class="r-wave"></div>
+  </div>
+  <div id="app">
+    <!-- メインフィールド（左側：盤面） -->
+    <div id="main-field">
+      <canvas id="game-canvas"></canvas>
+
+      <div id="screen-title" class="screen active">
+        <h1 class="game-title">
+          <span class="game-title-top">将棋</span>
+          <span class="title-strike">STRIKE</span>
+        </h1>
+        <p class="subtitle">Shogi × Action Battle</p>
+        <div class="menu">
+          <button id="btn-pvp" class="btn-main">ローカル対戦</button>
+          <button id="btn-cpu" class="btn-main">CPU 勝ち抜き戦</button>
+          <button id="btn-joi" class="btn-main">JOI戦</button>
+        </div>
+      </div>
+
+      <!-- ===== 確変演出オーバーレイ ===== -->
+      <div id="kakuhen-overlay">
+        <div class="kakuhen-text">JOI!!!!!!!!</div>
+      </div>
+
+      <!-- ===== デッキ選択 ===== -->
+      <div id="screen-deck" class="screen hidden">
+        <h2 id="deck-label">プレイヤー1 デッキ選択</h2>
+        <div class="fixed-deck-info">
+          <span class="chip">王将 ×1</span>
+          <span class="chip">歩兵 ×4</span>
+          <span class="chip highlight">好きな駒 ×3</span>
+        </div>
+        <p class="inst">好きな駒を3つ選んでください</p>
+        <div id="piece-options" class="piece-grid"></div>
+        <div class="selected-area">
+          <p>選択中: <strong id="sel-count">0</strong>/3</p>
+          <div id="sel-list" class="sel-list"></div>
+        </div>
+        <button id="btn-deck-ok" class="btn-main" disabled>決定</button>
+      </div>
+
+      <!-- ===== 配置フェーズ ===== -->
+      <div id="screen-placement" class="screen hidden">
+        <div id="placement-ui">
+          <h2 id="place-label">プレイヤー1 配置フェーズ</h2>
+          <p class="inst" id="place-inst">下の青枠内に駒を置いてください</p>
+          <div id="place-palette" class="place-palette"></div>
+          <div class="place-btns">
+            <button id="btn-place-auto" class="btn-main btn-sec">全員並べる</button>
+            <button id="btn-place-ok" class="btn-main" disabled>配置完了</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== バトル画面 (UIはサイドバーへ移動) ===== -->
+      <div id="screen-battle" class="screen hidden"></div>
+
+      <!-- ===== 結果画面 ===== -->
+      <div id="screen-result" class="screen hidden">
+        <h2 id="result-title">プレイヤー1の勝利！</h2>
+        <button id="btn-retry" class="btn-main">もう一度</button>
+        <button id="btn-to-title" class="btn-main btn-sec">タイトルへ</button>
+      </div>
+    </div>
+
+    <!-- サイドバー（右側：ルールと情報） -->
+    <div id="sidebar">
+      <div id="status-panel" class="sidebar-section">
+        <h2 id="turn-banner">待機中</h2>
+        <div id="piece-counts">
+          <p id="cpu-win-count" style="display:none; color:#ffcc00; font-weight:900;">勝ち抜き数: <strong>0</strong></p>
+          <p id="p2-count">敵の残り: <strong>-</strong></p>
+          <p id="p1-count">自分の残り: <strong>-</strong></p>
+        </div>
+        <p id="battle-inst" class="hint">ゲームを開始してください</p>
+      </div>
+
+      <div class="sidebar-section">
+        <h3>駒の移動制限</h3>
+        <ul class="rule-list">
+          <li><b>飛車</b>: 縦横の4方向のみ</li>
+          <li><b>角行</b>: 斜め4方向のみ</li>
+          <li><b>金将</b>: 後方斜め以外</li>
+          <li><b>銀将</b>: 前方 + 後方斜め</li>
+          <li><b>歩・香</b>: 真前方のごく狭い範囲</li>
+          <li><b>王将</b>: 全方向</li>
+        </ul>
+        <p class="hint">※制限方向以外には射出できません（ガイドが赤くなります）。</p>
+      </div>
+
+      <div class="sidebar-section">
+        <h3>基本ルール</h3>
+        <ul class="rule-list">
+          <li><b>王を倒せば勝利</b>: 相手の王将のHPを0にしてください。</li>
+          <li><b>攻撃</b>: 駒をぶつけるとATK分ダメージ。</li>
+          <li><b>成る</b>: 敵陣（奥1/3）に止まると強化されます。</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/constants.js"></script>
+  <script src="js/pieces.js"></script>
+  <script src="js/physics.js"></script>
+  <script src="js/renderer.js"></script>
+  <script src="js/ai.js"></script>
+  <script src="js/game.js"></script>
+</body>
+</html>
